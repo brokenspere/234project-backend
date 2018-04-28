@@ -52,6 +52,20 @@ public class ProductServiceImplTest {
         assertThat(productService.getAvailableProducts(),hasItems(new Product("123","Carrot","See som","xxx",50),
                 new Product("125","Grape","See muang","xxx",80)));
     }
+    @Test
+    public void testGetUnavailableWithMock(){
+        List<Product> mockProduct = new ArrayList<>();
+        mockProduct.add(new Product("123","Carrot","See som","xxx",50));
+        mockProduct.add(new Product("124 ","Orange","See som","xxx",0));
+        mockProduct.add(new Product("125","Grape","See muang","xxx",80));
+        when(productDao.getProducts()).thenReturn(mockProduct);
+
+        assertThat(productService.getUnavailableProductSize(), is(1));
+
+
+
+    }
+
 
     }
 
