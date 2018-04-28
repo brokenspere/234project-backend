@@ -41,4 +41,18 @@ public class SaleOrderServiceImpTest {
 
     }
 
+    @Test
+    public void testAverageSaleOderWithMock(){
+        List<SaleTransaction> transactions = new ArrayList<>();
+        List<SaleTransaction> transactions2 = new ArrayList<>();
+        transactions.add(new SaleTransaction("5555",new SaleOrder("352",transactions),new Product("123","Carrot","look like carrot","xxx",5), 10));
+        transactions2.add(new SaleTransaction("5556", new SaleOrder("353",transactions2),new Product("125","Bee","look like carrot","xxx",5), 10));
+        List<SaleOrder> saleOrders = new ArrayList<>();
+        saleOrders.add(new SaleOrder("352",transactions));
+        saleOrders.add(new SaleOrder("353",transactions2));
+        when(orderDao.getOrders()).thenReturn(saleOrders);
+        assertThat(saleOrderService.getAverageSaleOrderPrice(),is(50.0));
+
+    }
+
 }
