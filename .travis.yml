@@ -14,8 +14,6 @@ install:
   .
 - docker push brokenspere/234-project
 - docker pull dto80/project234-frontend
-script:
-- docker-compose -H "tcp://34.213.239.153:5587" up -d
 cashe:
   directories:
   - "$HOME/.m2"
