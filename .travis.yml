@@ -1,0 +1,26 @@
+language: java
+sudo: required
+before_install:
+- sudo rm /usr/local/bin/docker-compose
+- curl -L https://github.com/docker/compose/releases/download/1.20.1/docker-compose-`uname
+  -s`-`uname -m` > docker-compose
+- chmod +x docker-compose
+- sudo mv docker-compose /usr/local/bin
+- docker login -u "brokenspere" -p "$DOCKER_PASSWORD"
+install:
+- mvn install -Dmaven.javadoc.skip=true -B -V
+- ls -l
+- docker build --build-arg JAR_FILE=/target/backend.jar -t brokenspere/234-project
+  .
+- docker push brokenspere/234-project
+- docker pull dto80/project234-frontend
+script:
+- docker-compose -H "tcp://34.213.239.153:5587" up -d
+cashe:
+  directories:
+  - "$HOME/.m2"
+env:
+  global:
+  - secure: duhk2TSOvyt2I6j2l7nfurdcxddxTIrARsT/uyEZV0w6XAZANFC7YE01YKfAVT2g0HnYD0UfaUv3IloD4GYwJL+peqHK8S0POSUBqBviyH8/iRcFIRta1aaYRNfW5PuvKXPLVW+xQupgZgCCIX1lFIx+lMGKcxmPvhQN3gl6Sv1cTuyQWZ1glHpXenZgAPSPhjIsX2ntTXCL7A37rpGMKf4QDxmth2EJ0JHlhMrU2kgE/aTPDk8z3T3g1SjbHCaAGFTqEKj5LmTYoGYoIVuvUKH8+LjrSQEYSLfpwp1/dYxyj3dJxtPtimY8+j+9O11cttzpBlzZghCHZatJQgGH2+K7m8Qwt+IJBz8bZEx26a0/QiNfq5gVViLE7MfOkh6N2kHEHjMJy9o68R5pZJs2M05MvtLUzeHN/eDk9Lkrwiv6aXxSGmjv9EvZQP1oFNnWaPx5k9eR+YcxyEroN0g7Vinhzb4YC2Ms43BhwDuj1efnKjVhlEAVhpoTvhG2EPJz5xFPkSNC7k5c3HnPWpFWL4RWlMeL/yT34cDkUgN3LM730Pq/u76iGb0Lv24fhwj5hhBcmY8cyGzNNvd3Acylk3a7fpzPuYvr2eHEIv4WhCitNkQS9HyEil8ZPCOrx9fmwL95/yuoHdH9KztGuJKeM+fyN877HEuyLM1dIQzpDOA=
+  - secure: D0177Pa5IJS1mb+p4SQC5Fmevd6XKP+2CTpD+jRw1wvU24gr4DvhgQPrq/1gBHcWAW8W7sM98xsIHKjA7fF1P+Qv+xgQ8nTVUYQwURYLbRQroBLuwbOcuzK5LTcxqztj/aVlV8KEGrn0avwva2HTSb59muswt5juzDwq4N+EHYUZqHwsZwVCoFly2u+eInXY8Oa02BAlTlelW45ExHomX4gt1+uKT+Dmc5Meu2D0ffgda5s9VIqK86exSGRjCykuCMaFOv0otG0hMALktHHWhnk1FayMBINMh/pCp/QiAGHaPCTd8uNtC3JK5qUhFLWKDbVvMd4165Ehp9oLJqxRf/+/LytBCh6Oiexi/Qlpn8cNGQ6O/NSlqKR2Tyf8m1e1APrg9CRNRWf8a68TK4KLo6gRyexTGk07MKQ4SF5TR30pKk+RfMfE4kKKtoUwaRsqISJdMhBIg2n1aeZSC2qkxEUpZRaGWadOKZRAlU20OtiM55VTDxsnA3Tw7+C5OCjV53fPjtIOlaXOt52zyVmL9NNcWUbUEFItMFL5aWb0P4i5Tkq9z9kIdbLu7lOtvYOsqkKbQylZ+BPWY88Jw3hNDSM8YaolOIUWlftq9n0XNq6XuoSdXnTQaq3qwu2mq+scpDxKTDs7sFDxJOISPViTGaE0MlyiVvu9rkAF+/TF9H4=
+  - secure: LVSAIwprXD+y1IWvShpREySFe4yc3PCv4x+x16DaqzX1rn/owYKE06AHjd+ym30r/runWHBvpfMeb1+8pBKKbi9G75EBKkXj8eOPQTYjYhY9kx8RKOEJt7uG7vByGv+wpbJHjjLTi2cVw4CwduK0nrS3/CZdA0vfQwrV5r706DLT5yqW3lfQlezJ7Zp8qxXyja/6Ca2Bs4wPz6xXIUmfefv6V8ax7jI82+yXzP6I8aYUca4MyqHXnls2ZQ9J+ffxjjldjQLjs3C7yeAwdgdyksWfaKhtHx9wUdf5AOuDSL41npKabiCFx9pvDiHcWyGFbGA5X++Lece08xN4mRDDA2N13Exhy2mM0g1QC13k3Y7p/SgDcG64aWCr0JNxBBM22SyV+tY+P5gmsxz2glfGDcjquM14a1rXco/9euwJkHc4fJZVEOQP0iQYrqEEFiu2wHOKc5IjqW/8E2WFxeOFvrpflYxw7+Gv8Ie38b600g2H5v6F3UX5cvUE6BqjM7khITpUqGgnqeVe9NXGC7TaQRbvaX8FlebU88P18bXOlvwc9eJFSWYuKYOVwM9+as8Dc2uI0M3Ub1//mMKPUV+sFg2P+notFEIDIAFRZg+wmlhuGur/iOFFybD7LK2iTEakFTFwWsgp2m4+W6BNQeQxf7oOOP//y1SdRXE7tURYrIg=
