@@ -8,6 +8,7 @@ before_install:
 - sudo mv docker-compose /usr/local/bin
 - docker login -u "brokenspere" -p "$DOCKER_PASSWORD"
 install:
+- mvn -N io.takari:maven:wrapper
 - mvn install -Dmaven.javadoc.skip=true -B -V
 - ls -l
 - docker build --build-arg JAR_FILE=/target/backend.jar -t brokenspere/234-project
